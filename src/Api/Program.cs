@@ -1,6 +1,13 @@
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddKernel().AddOpenAIChatCompletion("GPT-4",
+    //apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new InvalidOperationException("OPENAI_API_KEY is required")
+    apiKey: builder.Configuration["OpenAI:ApiKey"]!
+);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -15,21 +22,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/api/Chat", async (string question) =>
+app.MapGet("/api/Chat", (string question, Kernel kernel) =>
 {
-    return GetPrompt(question);
+    return kernel.InvokePromptStreamingAsync<string>(question);
 })
 .WithName("ChatPrompt")
 .WithOpenApi();
-
-
 app.Run();
-
-static async IAsyncEnumerable<string> GetPrompt(string question)
-{
-    foreach (var msg in question.Split(" "))
-    {
-        await Task.Delay(100);
-        yield return msg + " ";
-    }
-}
