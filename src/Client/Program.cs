@@ -8,13 +8,13 @@ client.BaseAddress = new Uri(server);
 
 while (true)
 {
-    Console.WriteLine("Question: ");
+    Console.Write("Question: ");
 
     var question = Console.ReadLine();
 
     await foreach (var msg in client.GetFromJsonAsAsyncEnumerable<string>($"api/Chat?question={question}"))
     {
-        Console.WriteLine(msg);
+        Console.Write(msg);
     }
     Console.WriteLine();
 }
