@@ -3,7 +3,8 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddKernel().AddOpenAIChatCompletion("GPT-4",
+builder.Services.AddKernel().AddOpenAIChatCompletion(
+    "GPT-4",
     //apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new InvalidOperationException("OPENAI_API_KEY is required")
     apiKey: builder.Configuration["OpenAI:ApiKey"]!
 );
@@ -13,7 +14,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -28,4 +28,5 @@ app.MapGet("/api/Chat", (string question, Kernel kernel) =>
 })
 .WithName("ChatPrompt")
 .WithOpenApi();
+
 app.Run();
