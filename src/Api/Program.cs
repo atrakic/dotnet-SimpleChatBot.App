@@ -5,8 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddKernel().AddOpenAIChatCompletion(
     "GPT-4",
-    //apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new InvalidOperationException("OPENAI_API_KEY is required")
-    apiKey: builder.Configuration["OpenAI:ApiKey"]!
+    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? builder.Configuration["OpenAI:ApiKey"]!
 );
 
 builder.Services.AddEndpointsApiExplorer();
